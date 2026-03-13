@@ -1,0 +1,26 @@
+# These are supported funding model platforms
+# Digital Damage - Funding Configuration
+# Development & Production by D. Wesley Middleton
+# ENIGMA-ONE / Digital Damage Ecosystem
+
+# GitHub Sponsors (Primary - Recommended)
+github: datareccer  # Replace 'datareccer' with your GitHub username
+
+# Patreon - Monthly subscriptions
+patreon: digitaldamage  # Create at patreon.com/digitaldamage
+
+# Open Collective - Transparent budgeting
+open_collective: digital-damage  # Create at opencollective.com/digital-damage
+
+# Ko-fi - One-time coffee donations
+ko_fi: digitaldamage  # Create at ko-fi.com/digitaldamage
+
+# Buy Me a Coffee - Simple one-time
+buy_me_a_coffee: digitaldamage  # Create at buymeacoffee.com/digitaldamage
+
+# Custom links - Direct ways to support
+custom:
+  - 'https://digital-damage.com/sponsor'
+  - 'https://buy.stripe.com/your-stripe-link'
+  - 'https://paypal.me/digitaldamage'
+  - 'https://venmo.com/digitaldamage'
