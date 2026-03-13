@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>ENIGMA · Digital Damage</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #030303;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ENIGMA brand color */
+        :root {
+            --enigma: #ff6600;
+            --enigma-glow: rgba(255, 102, 0, 0.3);
+            --enigma-dark: #662200;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--enigma-dark);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: clamp(28px, 6vw, 42px);
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, var(--enigma));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo .badge {
+            font-size: 12px;
+            color: #999;
+            font-family: monospace;
+        }
+
+        .variant-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .variant-btn {
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid #333;
+            background: transparent;
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .variant-btn.active {
+            background: var(--enigma);
+            border-color: var(--enigma);
+            color: #000;
+            box-shadow: 0 0 15px var(--enigma-glow);
+        }
+
+        .variant-btn[data-variant="vibe"] { border-color: #00ffc8; color: #00ffc8; }
+        .variant-btn[data-variant="vibe"].active { background: #00ffc8; color: #000; }
+        
+        .variant-btn[data-variant="wolf"] { border-color: #00ffc8; color: #00ffc8; }
+        .variant-btn[data-variant="wolf"].active { background: #00ffc8; color: #000; }
+        
+        .variant-btn[data-variant="raven"] { border-color: #b47aff; color: #b47aff; }
+        .variant-btn[data-variant="raven"].active { background: #b47aff; color: #000; }
+        
+        .variant-btn[data-variant="enigma"].active { background: var(--enigma); color: #000; }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            margin: 40px 0 60px;
+        }
+
+        .hero-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 30px var(--enigma-glow));
+            animation: pulse 3s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .hero h2 {
+            font-size: clamp(32px, 8vw, 56px);
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, var(--enigma));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero .acronym {
+            font-family: monospace;
+            font-size: 14px;
+            letter-spacing: 4px;
+            color: var(--enigma);
+            margin-bottom: 20px;
+        }
+
+        .hero .full-form {
+            color: #999;
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 24px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card.enigma-exclusive {
+            border-color: var(--enigma);
+            box-shadow: 0 0 20px var(--enigma-glow);
+        }
+
+        .feature-card.locked {
+            opacity: 0.7;
+            filter: grayscale(0.5);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .feature-card p {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .feature-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .badge-exclusive {
+            background: var(--enigma);
+            color: #000;
+        }
+
+        .badge-locked {
+            background: #333;
+            color: #999;
+        }
+
+        .feature-preview {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .launch-btn {
+            background: var(--enigma);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            max-width: 200px;
+            margin: 15px auto 0;
+        }
+
+        .launch-btn:active {
+            transform: scale(0.95);
+        }
+
+        .launch-btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        /* Developer Options */
+        .dev-options {
+            margin: 60px 0 40px;
+            padding: 30px;
+            background: #0a0a0a;
+            border: 1px dashed var(--enigma);
+            border-radius: 24px;
+            display: none;
+        }
+
+        .dev-options.visible {
+            display: block;
+        }
+
+        .dev-options h3 {
+            color: var(--enigma);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .feature-matrix {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .feature-matrix th {
+            text-align: left;
+            padding: 10px;
+            color: #999;
+            border-bottom: 1px solid #333;
+        }
+
+        .feature-matrix td {
+            padding: 10px;
+            border-bottom: 1px solid #222;
+        }
+
+        .matrix-check {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .matrix-lock {
+            color: #666;
+        }
+
+        .secret-message {
+            margin-top: 30px;
+            padding: 20px;
+            background: #000;
+            border-left: 4px solid var(--enigma);
+            color: #ccc;
+            font-style: italic;
+        }
+
+        /* Version Tap */
+        .version-tap {
+            text-align: center;
+            margin: 40px 0 20px;
+            padding: 10px;
+            color: #333;
+            font-size: 12px;
+            font-family: monospace;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .tap-counter {
+            margin-top: 5px;
+            font-size: 10px;
+            color: #666;
+        }
+
+        /* Feedback Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #111;
+            border: 1px solid var(--enigma);
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-content h4 {
+            color: var(--enigma);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .rating-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .rating-btn {
+            flex: 1;
+            aspect-ratio: 1;
+            background: #222;
+            border: none;
+            border-radius: 15px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .rating-btn.selected {
+            background: var(--enigma);
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 15px;
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 15px;
+            color: #fff;
+            margin: 20px 0;
+            font-family: inherit;
+        }
+
+        .modal-close {
+            background: var(--enigma);
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 60px;
+            padding: 20px;
+            text-align: center;
+            color: #333;
+            font-size: 12px;
+            border-top: 1px solid #222;
+        }
+
+        /* Utilities */
+        .text-enigma { color: var(--enigma); }
+        .bg-enigma { background: var(--enigma); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <h1>⚡ ENIGMA-ONE</h1>
+                <div class="badge">alpha · digital damage</div>
+            </div>
+            <div class="variant-selector" id="variantSelector">
+                <button class="variant-btn" data-variant="vibe" onclick="setVariant('vibe')">VIBE</button>
+                <button class="variant-btn" data-variant="wolf" onclick="setVariant('wolf')">WOLF</button>
+                <button class="variant-btn" data-variant="raven" onclick="setVariant('raven')">RAVEN</button>
+                <button class="variant-btn active" data-variant="enigma" onclick="setVariant('enigma')">ENIGMA</button>
+            </div>
+        </div>
+
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-icon">❓</div>
+            <h2>ENIGMA</h2>
+            <div class="acronym">E.N.I.G.M.A.</div>
+            <div class="full-form">Encrypted Node Interface · Gateway · Manipulation Array</div>
+        </div>
+
+        <!-- Feature Grid -->
+        <div class="feature-grid" id="featureGrid">
+            <!-- Crypto Toolbox (ENIGMA Exclusive) -->
+            <div class="feature-card enigma-exclusive" id="card-crypto">
+                <div class="feature-icon">🔐</div>
+                <div class="feature-badge badge-exclusive">ENIGMA EXCLUSIVE</div>
+                <h3>Crypto Toolbox</h3>
+                <p>On-device decryption, rolling code analysis, frequency manipulation</p>
+                <button class="launch-btn" onclick="launchFeature('crypto')">LAUNCH</button>
+            </div>
+
+            <!-- Signal Visualizer (VIBE Exclusive) -->
+            <div class="feature-card locked" id="card-visualizer">
+                <div class="feature-icon">📊</div>
+                <div class="feature-badge badge-locked">VIBE EXCLUSIVE</div>
+                <h3>Signal Visualizer</h3>
+                <p>Real-time FFT graphs, spectrum analysis, signal identification</p>
+                <button class="launch-btn" disabled>LOCKED</button>
+                <div class="feature-preview">✨ VIBE testers only</div>
+            </div>
+
+            <!-- Bruteforce Assistant (WOLF Exclusive) -->
+            <div class="feature-card locked" id="card-bruteforce">
+                <div class="feature-icon">🔓</div>
+                <div class="feature-badge badge-locked">WOLF EXCLUSIVE</div>
+                <h3>Bruteforce Assistant</h3>
+                <p>Rolling code patterns, sub-ghz bruteforce, replay attacks</p>
+                <button class="launch-btn" disabled>LOCKED</button>
+                <div class="feature-preview">🐺 WOLF pack only</div>
+            </div>
+
+            <!-- Memory Bank (RAVEN Exclusive) -->
+            <div class="feature-card locked" id="card-memory">
+                <div class="feature-icon">🧠</div>
+                <div class="feature-badge badge-locked">RAVEN EXCLUSIVE</div>
+                <h3>Memory Bank</h3>
+                <p>Encrypted capture storage, signal memory, pattern recognition</p>
+                <button class="launch-btn" disabled>LOCKED</button>
+                <div class="feature-preview">🐦‍⬛ RAVEN intelligence</div>
+            </div>
+        </div>
+
+        <!-- Developer Options (Hidden) -->
+        <div class="dev-options" id="devOptions">
+            <h3>⚙️ DEVELOPER OPTIONS</h3>
+            
+            <table class="feature-matrix">
+                <tr>
+                    <th>Feature</th>
+                    <th>VIBE</th>
+                    <th>WOLF</th>
+                    <th>RAVEN</th>
+                    <th>ENIGMA</th>
+                </tr>
+                <tr>
+                    <td>Crypto Toolbox</td>
+                    <td class="matrix-lock">🔒</td>
+                    <td class="matrix-lock">🔒</td>
+                    <td class="matrix-lock">🔒</td>
+                    <td class="matrix-check">✅</td>
+                </tr>
+                <tr>
+                    <td>Signal Visualizer</td>
+                    <td class="matrix-check">✅</td>
+                    <td class="matrix-lock">🔒</td>
+                    <td class="matrix-lock">🔒</td>
+                    <td class="matrix-lock">🔒</td>
+                </tr>
+                <tr>
+                    <td>Bruteforce Assistant</td>
+                    <td class="matrix-lock">🔒</td>
+                    <td class="matrix-check">✅</td>
+                    <td class="matrix-lock">🔒</td>
+                    <td class="matrix-lock">🔒</td>
+                </tr>
+                <tr>
+                    <td>Memory Bank</td>
+                    <td class="matrix-lock">🔒</td>
+                    <td class="matrix-lock">🔒</td>
+                    <td class="matrix-check">✅</td>
+                    <td class="matrix-lock">🔒</td>
+                </tr>
+            </table>
+
+            <div class="secret-message">
+                <strong>🔓 PRODUCTION UNLOCKS ALL FEATURES</strong><br>
+                Alpha testers: Your feedback shapes the final product.<br>
+                The variant with most active testers wins.
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h4>📊 Live Stats</h4>
+                <div id="liveStats">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Version Tap (Easter Egg Trigger) -->
+        <div class="version-tap" onclick="handleTap()" id="versionTap">
+            ⚡ ENIGMA-ONE · ALPHA v0.1 · DIGITAL DAMAGE ⚡
+            <div class="tap-counter" id="tapCounter"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Development & Production by D. Wesley Middleton<br>
+            © 2026 Digital Damage · All rights reserved
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal" id="feedbackModal">
+        <div class="modal-content">
+            <h4 id="modalTitle">🚀 Launching Crypto Toolbox</h4>
+            <p style="color: #ccc; margin-bottom: 20px;">Help us improve. Rate your experience:</p>
+            
+            <div class="rating-buttons" id="ratingButtons">
+                <button class="rating-btn" onclick="setRating(1)">1</button>
+                <button class="rating-btn" onclick="setRating(2)">2</button>
+                <button class="rating-btn" onclick="setRating(3)">3</button>
+                <button class="rating-btn" onclick="setRating(4)">4</button>
+                <button class="rating-btn" onclick="setRating(5)">5</button>
+            </div>
+
+            <textarea class="modal-input" id="feedbackText" placeholder="Tell us more... (optional)" rows="3"></textarea>
+            
+            <button class="modal-close" onclick="submitFeedback()">SUBMIT FEEDBACK</button>
+        </div>
+    </div>
+
+    <script>
+        // ==================== STATE ====================
+        let currentVariant = 'enigma'; // Default for enigma-one
+        let tapCount = 0;
+        let lastTap = 0;
+        let currentRating = 0;
+        let currentFeature = '';
+
+        // Load saved variant
+        (function() {
+            const saved = localStorage.getItem('dd_variant');
+            if (saved && ['vibe', 'wolf', 'raven', 'enigma'].includes(saved)) {
+                currentVariant = saved;
+            }
+            updateUIForVariant(currentVariant);
+            highlightActiveButton(currentVariant);
+        })();
+
+        // ==================== VARIANT SWITCHER ====================
+        function setVariant(variant) {
+            currentVariant = variant;
+            localStorage.setItem('dd_variant', variant);
+            updateUIForVariant(variant);
+            highlightActiveButton(variant);
+            
+            // Track variant switch
+            console.log(`Variant switched to: ${variant}`);
+        }
+
+        function updateUIForVariant(variant) {
+            // Reset all cards
+            document.getElementById('card-crypto').className = 'feature-card';
+            document.getElementById('card-visualizer').className = 'feature-card locked';
+            document.getElementById('card-bruteforce').className = 'feature-card locked';
+            document.getElementById('card-memory').className = 'feature-card locked';
+
+            // Reset badges
+            document.querySelectorAll('.feature-badge').forEach(b => {
+                b.className = 'feature-badge badge-locked';
+            });
+
+            // Enable current variant's feature
+            if (variant === 'enigma') {
+                document.getElementById('card-crypto').className = 'feature-card enigma-exclusive';
+                document.getElementById('card-crypto').querySelector('.feature-badge').className = 'feature-badge badge-exclusive';
+                document.getElementById('card-crypto').querySelector('.feature-badge').textContent = 'ENIGMA EXCLUSIVE';
+                document.getElementById('card-crypto').querySelector('button').disabled = false;
+            }
+            else if (variant === 'vibe') {
+                document.getElementById('card-visualizer').className = 'feature-card enigma-exclusive';
+                document.getElementById('card-visualizer').querySelector('.feature-badge').className = 'feature-badge badge-exclusive';
+                document.getElementById('card-visualizer').querySelector('.feature-badge').textContent = 'VIBE EXCLUSIVE';
+                document.getElementById('card-visualizer').querySelector('button').disabled = false;
+            }
+            else if (variant === 'wolf') {
+                document.getElementById('card-bruteforce').className = 'feature-card enigma-exclusive';
+                document.getElementById('card-bruteforce').querySelector('.feature-badge').className = 'feature-badge badge-exclusive';
+                document.getElementById('card-bruteforce').querySelector('.feature-badge').textContent = 'WOLF EXCLUSIVE';
+                document.getElementById('card-bruteforce').querySelector('button').disabled = false;
+            }
+            else if (variant === 'raven') {
+                document.getElementById('card-memory').className = 'feature-card enigma-exclusive';
+                document.getElementById('card-memory').querySelector('.feature-badge').className = 'feature-badge badge-exclusive';
+                document.getElementById('card-memory').querySelector('.feature-badge').textContent = 'RAVEN EXCLUSIVE';
+                document.getElementById('card-memory').querySelector('button').disabled = false;
+            }
+        }
+
+        function highlightActiveButton(variant) {
+            document.querySelectorAll('.variant-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.variant === variant) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // ==================== FEATURE LAUNCH ====================
+        function launchFeature(feature) {
+            currentFeature = feature;
+            
+            const titles = {
+                crypto: '🔐 Crypto Toolbox',
+                visualizer: '📊 Signal Visualizer',
+                bruteforce: '🔓 Bruteforce Assistant',
+                memory: '🧠 Memory Bank'
+            };
+            
+            document.getElementById('modalTitle').textContent = `🚀 Launching ${titles[feature]}`;
+            document.getElementById('feedbackModal').classList.add('visible');
+        }
+
+        function setRating(rating) {
+            currentRating = rating;
+            document.querySelectorAll('.rating-btn').forEach((btn, index) => {
+                if (index + 1 === rating) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+
+        function submitFeedback() {
+            const feedback = {
+                feature: currentFeature,
+                variant: currentVariant,
+                rating: currentRating,
+                comment: document.getElementById('feedbackText').value,
+                timestamp: new Date().toISOString()
+            };
+
+            // Save to local storage (simulated)
+            const saved = JSON.parse(localStorage.getItem('dd_feedback') || '[]');
+            saved.push(feedback);
+            localStorage.setItem('dd_feedback', JSON.stringify(saved));
+
+            // Show confirmation
+            alert('✅ Thanks for your feedback!');
+
+            // Close modal
+            document.getElementById('feedbackModal').classList.remove('visible');
+            
+            // Reset
+            currentRating = 0;
+            document.getElementById('feedbackText').value = '';
+            document.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('selected'));
+            
+            // Update stats
+            updateStats();
+        }
+
+        // ==================== EASTER EGG ====================
+        function handleTap() {
+            const now = Date.now();
+            
+            if (now - lastTap < 3000) {
+                tapCount++;
+                
+                if (tapCount === 7) {
+                    document.getElementById('devOptions').classList.add('visible');
+                    document.getElementById('tapCounter').innerHTML = '🎉 SECRET UNLOCKED!';
+                    updateStats();
+                    
+                    // Vibrate if supported
+                    if (navigator.vibrate) navigator.vibrate(50);
+                    
+                    tapCount = 0;
+                } else {
+                    document.getElementById('tapCounter').innerHTML = `🔍 ${tapCount}/7 taps`;
+                }
+            } else {
+                tapCount = 1;
+                document.getElementById('tapCounter').innerHTML = '🔍 1/7 taps';
+            }
+            
+            lastTap = now;
+        }
+
+        // ==================== STATS ====================
+        function updateStats() {
+            const feedback = JSON.parse(localStorage.getItem('dd_feedback') || '[]');
+            
+            const counts = {
+                vibe: feedback.filter(f => f.variant === 'vibe').length,
+                wolf: feedback.filter(f => f.variant === 'wolf').length,
+                raven: feedback.filter(f => f.variant === 'raven').length,
+                enigma: feedback.filter(f => f.variant === 'enigma').length
+            };
+            
+            const total = counts.vibe + counts.wolf + counts.raven + counts.enigma;
+            
+            document.getElementById('liveStats').innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;">
+                    <div>🌊 VIBE: ${counts.vibe}</div>
+                    <div>🐺 WOLF: ${counts.wolf}</div>
+                    <div>🐦‍⬛ RAVEN: ${counts.raven}</div>
+                    <div>❓ ENIGMA: ${counts.enigma}</div>
+                </div>
+                <div style="margin-top: 10px;">Total feedback submissions: ${total}</div>
+            `;
+        }
+
+        // ==================== INIT ====================
+        updateStats();
+
+        // Auto-refresh stats every 30 seconds
+        setInterval(updateStats, 30000);
+    </script>
+</body>
+</html>
